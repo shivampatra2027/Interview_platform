@@ -11,6 +11,7 @@ The system asks questions (planned: via voice), records user responses, and gene
 ## 🏗 Project Structure (Root)
 
 📁 Backend Structure:
+```
 backend/
 ├─ src/
 │  ├─ app.js                 # Express app setup
@@ -48,8 +49,8 @@ backend/
 ├─ .env
 ├─ .gitignore
 └─ package.json
-
-
+```
+```
 📁 Frontend Structure
 client/
 ├─ src/
@@ -84,7 +85,7 @@ client/
 ├─ index.html
 ├─ vite.config.js
 └─ package.json
-
+```
 🧠 Core Features (Planned)
   1) User authentication (register/login).
   2) Create and join AI interview sessions.
