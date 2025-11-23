@@ -5,6 +5,7 @@ import LoginPage from './pages/LoginPage'
 import DashboardPage from './pages/DashboardPage'
 import InterviewPage from './pages/InterviewPage'
 import ReportsPage from './pages/ReportsPage'
+import FAQPage from './pages/FAQPage'
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
       <Route path="/dashboard" element={<DashboardPage />} />
       <Route path="/interview" element={<InterviewPage />} />
       <Route path="/reports" element={<ReportsPage />} />
+      <Route path="/faq" element={<FAQPage />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )
