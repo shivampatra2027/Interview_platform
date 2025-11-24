@@ -7,6 +7,7 @@ import DashboardPage from './pages/DashboardPage'
 import InterviewPage from './pages/InterviewPage'
 import ReportsPage from './pages/ReportsPage'
 import FAQPage from './pages/FAQPage'
+import ComponentsDemo from './pages/ComponentsDemo'
 
 const ProtectedRoute = ({ children }) => {
   return (
@@ -50,6 +51,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/faq" element={<FAQPage />} />
+        <Route path="/components" element={<ComponentsDemo />} />
         
         <Route 
           path="/dashboard" 
