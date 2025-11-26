@@ -9,6 +9,8 @@ import ReportsPage from './pages/ReportsPage'
 import FAQPage from './pages/FAQPage'
 import ComponentsDemo from './pages/ComponentsDemo'
 import AboutPage from './pages/AboutPage'
+import TermsPage from './pages/TermsPage'
+import PrivacyPage from './pages/PrivacyPage'
 
 const ProtectedRoute = ({ children }) => {
   return (
@@ -53,6 +55,8 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/faq" element={<FAQPage />} />
+        <Route path="/terms" element={<TermsPage />} />
+        <Route path="/privacy" element={<PrivacyPage />} />
         <Route path="/components" element={<ComponentsDemo />} />
         
         <Route 

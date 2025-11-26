@@ -20,6 +20,10 @@ export function NavbarDemo() {
       link: "#features",
     },
     {
+      name: "About Us",
+      link: "/about",
+    },
+    {
       name: "Pricing",
       link: "#pricing",
     },
