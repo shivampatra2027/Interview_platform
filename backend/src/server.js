@@ -6,6 +6,7 @@ import  connectDB  from "./config/db.js";
 import authRoutes from "./routes/auth.routes.js";
 import interviewRoutes from "./routes/interview.routes.js";
 import { config } from "./config/env.js";
+import apiRouter from "./routes/index.js";
 dotenv.config();
 const PORT = process.env.PORT || 5001;
 
@@ -25,6 +26,7 @@ app.use("/api/auth", authRoutes);
 app.get("/", (req, res) => {
   res.send("Server Already Running.");
 });
+app.use("/api",apiRouter);
 
 connectDB()
   .then(() => {

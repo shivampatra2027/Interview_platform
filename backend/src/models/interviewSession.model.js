@@ -90,16 +90,15 @@ const interviewSessionSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Create model and export as default so `import InterviewModel from './interviewSession.model.js'` works.
+
 const InterviewSession = mongoose.model(
   "InterviewSession",
   interviewSessionSchema
 );
 export default InterviewSession;
 
-// src/services/ai.service.js
+
 export function evaluateInterviewAnswers(answers) {
-  // Example logic: score answers
   return answers.map(ans => ({
     ...ans,
     score: ans.text.length > 0 ? 7 : 0,

@@ -1,16 +1,20 @@
+// src/app.js
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import { connectDB } from "./lib/db.js";
-import authRoutes from "./routes/auth.routes.js";
-import { config } from "./config/env.js";
-dotenv.config();
-const PORT = process.env.PORT || 5001;
 
+import connectDB from "./config/db.js";
+import authRoutes from "./routes/auth.routes.js";
+import apiRouter from "./routes/index.js";
+import { config } from "./config/env.js";
+
+dotenv.config();
 
 const app = express();
-const allowedOrigins = [process.env.CLIENT_URL || "http://localhost:5173"];
+
+// CORS origins (frontend)
+const allowedOrigins = [process.env.CLIENT_URL || "http://localhost:5173", "http://localhost:3000"];
 
 app.use(
   cors({
@@ -20,18 +24,19 @@ app.use(
 );
 app.use(cookieParser());
 app.use(express.json());
+
+// REST routes
 app.use("/api/auth", authRoutes);
+app.use("/api", apiRouter);
+
 app.get("/", (req, res) => {
   res.send("Server Already Running.");
 });
 
-connectDB()
-  .then(() => {
-    app.listen(PORT, () => {
-      console.log(`Server is live at http://localhost:${PORT}`);
-    });
-  })
-  .catch((err) => {
-    console.log("Error connecting the DB..", err.message);
-    process.exit(1);
-  });
+// export a function to bootstrap DB (so server.js can call it)
+export async function initApp() {
+  await connectDB();
+  return app;
+}
+
+export default app;

@@ -59,6 +59,6 @@ const reportSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// ⬅️ THIS IS THE IMPORTANT FIX
+
 const ReportModel = mongoose.model("Report", reportSchema);
 export default ReportModel;
