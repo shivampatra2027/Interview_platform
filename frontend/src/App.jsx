@@ -24,7 +24,7 @@ const AuthHeader = () => {
   return (
     <div className="fixed top-4 right-4 z-100 flex items-center gap-3">
       <SignedOut>
-        <SignInButton mode="modal">
+        <SignInButton mode="modal" forceRedirectUrl="/dashboard">
           <button className="px-6 py-2.5 rounded-lg bg-linear-to-r from-purple-600 to-blue-600 text-white font-semibold hover:shadow-xl hover:shadow-purple-500/50 transition-all transform hover:scale-105 shadow-lg">
             Sign In
           </button>
