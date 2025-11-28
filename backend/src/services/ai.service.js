@@ -141,9 +141,14 @@ export async function processUserAudio({ interviewId, audioBase64, audioExt = "w
    Wrapper (Fix for controller import)
 -------------------- */
 export async function evaluateInterviewAnswers({ interviewId, audioBase64, audioExt = "webm" }) {
-  return await processUserAudio({ interviewId, audioBase64, audioExt });
-}
+  // ✅ If audio is provided, run full audio pipeline
+  if (audioBase64) {
+    return await processUserAudio({ interviewId, audioBase64, audioExt });
+  }
 
+  //  If no audio, fall back to text-only report generation
+  return await generateFinalReport(interviewId);
+}
 /* --------------------
    Initial Question
 -------------------- */

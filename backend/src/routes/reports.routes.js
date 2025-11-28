@@ -14,8 +14,6 @@ const router = express.Router();
 router.post("/generate", authMiddleware, generateReport);
 router.get("/", authMiddleware, listUserReports);
 router.get("/:reportId", authMiddleware, getReportById);
-
-
 router.get("/interview/:interviewId", authMiddleware, getReportForInterview);
 
 export default router;

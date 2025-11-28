@@ -9,11 +9,14 @@ export default function authRequired(req, res, next) {
   if (!token) return res.status(401).json({ message: "Token missing" });
 
   try {
-    const payload = jwt.verify(token, config.jwtSecret);
-    req.user = { _id: payload.id }; 
-    next();
-  } catch (err) {
-    console.error("Auth Error:", err.message);
-    return res.status(401).json({ message: "Invalid or expired token" });
+  const payload = jwt.verify(token, config.jwtSecret);
+  if (!payload?.id) {
+    return res.status(401).json({ message: "Invalid token payload" });
   }
+  req.user = { _id: payload.id };
+  next();
+} catch (err) {
+  console.error("Auth Error:", err.message);
+  return res.status(401).json({ message: "Invalid or expired token" });
+}
 }

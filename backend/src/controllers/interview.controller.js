@@ -81,7 +81,6 @@ export const startInterview = async (req, res, next) => {
 export const submitAnswer = async (req, res, next) => {
   try {
     const { id } = req.params; // interview id
-    const { questionIndex, answerText } = req.body;
 
     const interview = await InterviewSession.findOne({
       _id: id,
@@ -99,11 +98,14 @@ export const submitAnswer = async (req, res, next) => {
         .status(400)
         .json({ success: false, message: "Interview is not ongoing" });
     }
-
+    
+    const { questionIndex, answerText } = req.body;
     if (
-      questionIndex < 0 ||
-      questionIndex >= (interview.questions?.length || 0)
-    ) {
+  typeof questionIndex !== "number" ||
+  isNaN(questionIndex) ||
+  questionIndex < 0 ||
+  questionIndex >= (interview.questions?.length || 0)
+)  {
       return res
         .status(400)
         .json({ success: false, message: "Invalid question index" });
@@ -176,7 +178,7 @@ export const completeInterview = async (req, res, next) => {
       );
     }
 
-    // simple AI evaluation
+    //Plz note: Call evaluation with interviewId (and audioBase64 if available)
     const {
       overallScore,
       updatedAnswers,
@@ -184,24 +186,32 @@ export const completeInterview = async (req, res, next) => {
       weaknesses,
       recommendations,
       rawAiFeedback,
-    } = await evaluateInterviewAnswers(interview);
+    } = await evaluateInterviewAnswers({
+      interviewId: interview._id,
+      audioBase64: interview.answers?.[0]?.audioBase64 || null, // optional
+    });
 
-    interview.answers = updatedAnswers;
-    interview.overallScore = overallScore;
+    // Update interview fields
+    if (updatedAnswers) {
+      interview.answers = updatedAnswers;
+    }
+    interview.overallScore = overallScore || 0;
     interview.status = "completed";
     interview.endedAt = new Date();
 
-    // create report
+    // Create report
     const report = await Report.create({
       interview: interview._id,
-      user: interview.user,
-      overallScore,
-      strengths,
-      weaknesses,
-      recommendations,
-      skillBreakdown: [], // can fill later
-      rawAiFeedback,
+      user: req.user._id,
+      overallScore: interview.overallScore,
+      strengths: strengths || [],
+      weaknesses: weaknesses || [],
+      recommendations: recommendations || [],
+      skillBreakdown: [], 
+      rawAiFeedback: rawAiFeedback || null,
     });
+    console.log("Creating report for user:", req.user?._id);
+
 
     interview.report = report._id;
     await interview.save();
@@ -218,6 +228,7 @@ export const completeInterview = async (req, res, next) => {
     next(err);
   }
 };
+
 
 export const getMyInterviews = async (req, res, next) => {
   try {
