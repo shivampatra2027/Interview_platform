@@ -13,8 +13,6 @@ import { config } from "./config/env.js";
 dotenv.config();
 
 const app = express();
-
-// CORS origins (frontend)
 const allowedOrigins = [process.env.CLIENT_URL || "http://localhost:5173", "http://localhost:3000"];
 
 app.use(
@@ -26,10 +24,8 @@ app.use(
 app.use(cookieParser());
 app.use(express.json());
 
-// Clerk middleware - must be before routes
-app.use(clerkMiddleware());
 
-// REST routes
+app.use(clerkMiddleware());
 app.use("/api/auth", authRoutes);
 app.use("/api", apiRouter);
 
@@ -37,7 +33,6 @@ app.get("/", (req, res) => {
   res.send("Server Already Running.");
 });
 
-// export a function to bootstrap DB (so server.js can call it)
 export async function initApp() {
   await connectDB();
   return app;

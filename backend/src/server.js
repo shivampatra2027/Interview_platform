@@ -2,32 +2,39 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import  connectDB  from "./config/db.js";
+import connectDB from "./config/db.js";
 import authRoutes from "./routes/auth.routes.js";
 import interviewRoutes from "./routes/interview.routes.js";
-import { config } from "./config/env.js";
 import apiRouter from "./routes/index.js";
+
 dotenv.config();
-const PORT = process.env.PORT || 5001;
-
-
+const PORT = process.env.PORT || 5002;
+const allowedOrigins = [process.env.CLIENT_URL || "http://localhost:5174"];
 const app = express();
-const allowedOrigins = [process.env.CLIENT_URL || "http://localhost:5173"];
 
 app.use(
   cors({
-    origin: allowedOrigins,
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        console.log("Blocked by CORS:", origin);
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   })
 );
+
 app.use(cookieParser());
 app.use(express.json());
 app.use("/api/auth", authRoutes);
+app.use("/api/interview", interviewRoutes);
+app.use("/api", apiRouter);
+
 app.get("/", (req, res) => {
   res.send("Server Already Running.");
 });
-app.use("/api",apiRouter);
-app.use("/api/interview", interviewRoutes);
 
 connectDB()
   .then(() => {
@@ -36,6 +43,6 @@ connectDB()
     });
   })
   .catch((err) => {
-    console.log("Error connecting the DB..", err.message);
+    console.error("Error connecting the DB..", err.message);
     process.exit(1);
   });
