@@ -2,6 +2,11 @@ import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 
 const userSchema = new mongoose.Schema({
+  clerkId:{
+    type:String,
+    required:true,
+    unique:true
+  },
   name: {
     type: String,
     required: true,

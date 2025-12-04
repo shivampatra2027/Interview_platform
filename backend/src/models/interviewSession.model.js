@@ -1,4 +1,3 @@
-// src/models/interviewSession.model.js
 import mongoose from "mongoose";
 
 const questionSchema = new mongoose.Schema(

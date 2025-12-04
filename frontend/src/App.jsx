@@ -11,7 +11,8 @@ import ComponentsDemo from './pages/ComponentsDemo'
 import AboutPage from './pages/AboutPage'
 import TermsPage from './pages/TermsPage'
 import PrivacyPage from './pages/PrivacyPage'
-
+import DebugToken from './components/DebugToken';   // adjust path if needed
+import SyncUser from "./components/SyncUser";
 const ProtectedRoute = ({ children }) => {
   return (
     <SignedIn>
@@ -63,7 +64,9 @@ function App() {
           path="/dashboard" 
           element={
             <ProtectedRoute>
+              <SyncUser/>
               <DashboardPage />
+              {/* <DebugToken/> */}
             </ProtectedRoute>
           } 
         />
@@ -83,8 +86,10 @@ function App() {
             </ProtectedRoute>
           } 
         />
+
         
         <Route path="*" element={<Navigate to="/" replace />} />
+
       </Routes>
     </>
   )

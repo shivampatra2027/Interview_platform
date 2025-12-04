@@ -11,12 +11,9 @@ import {
 export const createInterview = async (req, res, next) => {
   try {
     const { title, position, difficultyLevel, questionCount = 5 } = req.body;
-
-    // normalize difficulty
     const allowedLevels = ["beginner", "easy", "hard", "advanced"];
     const level = allowedLevels.includes(difficultyLevel) ? difficultyLevel : "beginner";
 
-    // generate questions and wrap in objects
     const rawQuestions = await generateQuestionsForPosition({
       position: position || "Software Developer",
       difficultyLevel: level,
@@ -25,7 +22,7 @@ export const createInterview = async (req, res, next) => {
     const questions = rawQuestions.map(q => ({ text: q }));
 
     const interview = await InterviewSession.create({
-      user: req.auth.userId, // ensure req.user is set correctly
+      user: req.auth.userId, 
       title: title || "Mock Interview",
       position: position || "",
       difficultyLevel: level,
@@ -80,7 +77,7 @@ export const startInterview = async (req, res, next) => {
 
 export const submitAnswer = async (req, res, next) => {
   try {
-    const { id } = req.params; // interview id
+    const { id } = req.params; 
 
     const interview = await InterviewSession.findOne({
       _id: id,
@@ -178,7 +175,7 @@ export const completeInterview = async (req, res, next) => {
       );
     }
 
-    //Plz note: Call evaluation with interviewId (and audioBase64 if available)
+    
     const {
       overallScore,
       updatedAnswers,
@@ -191,7 +188,7 @@ export const completeInterview = async (req, res, next) => {
       audioBase64: interview.answers?.[0]?.audioBase64 || null, // optional
     });
 
-    // Update interview fields
+    
     if (updatedAnswers) {
       interview.answers = updatedAnswers;
     }
@@ -199,7 +196,7 @@ export const completeInterview = async (req, res, next) => {
     interview.status = "completed";
     interview.endedAt = new Date();
 
-    // Create report
+    
     const report = await Report.create({
       interview: interview._id,
       user: req.auth.userId,

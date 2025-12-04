@@ -4,8 +4,10 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import connectDB from "./config/db.js";
 import authRoutes from "./routes/auth.routes.js";
+import userRoutes from "./routes/user.routes.js";
 import interviewRoutes from "./routes/interview.routes.js";
 import apiRouter from "./routes/index.js";
+import { requireAuth } from "@clerk/express";
 
 dotenv.config();
 const PORT = process.env.PORT || 5002;
@@ -25,7 +27,8 @@ app.use(
     credentials: true,
   })
 );
-
+app.use('/api', userRoutes);
+app.use('/api/users',userRoutes);
 app.use(cookieParser());
 app.use(express.json());
 app.use("/api/auth", authRoutes);
