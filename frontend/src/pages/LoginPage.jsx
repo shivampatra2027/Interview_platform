@@ -1,9 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LogIn, Mail, Lock, User, Cpu } from 'lucide-react';
+import {useUser,SignIn} from "@clerk/clerk-react";
 
 export default function LoginPage() {
+
+  const {isSignedIn} = useUser();
   const navigate = useNavigate();
+  useEffect(()=>{
+    if(isSignedIn){
+      navigate("/dashboard")
+    }
+  },[isSignedIn]);
   const [isSignup, setIsSignup] = useState(false);
   const [formData, setFormData] = useState({
     email: '',

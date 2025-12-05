@@ -27,7 +27,7 @@ app.use(
     credentials: true,
   })
 );
-app.use('/api', userRoutes);
+
 app.use('/api/users',userRoutes);
 app.use(cookieParser());
 app.use(express.json());

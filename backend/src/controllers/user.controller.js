@@ -3,18 +3,18 @@ import { clerkClient } from "@clerk/clerk-sdk-node";
 import {User} from "../models/user.model.js";
 
 export const saveUser = async (req, res) => {
-    // console.log("saveUser route hit");
+    console.log("saveUser route hit");
 
     try {
         const { userId } = getAuth(req);
-        // console.log("userId:", userId);
+        console.log("userId:", userId);
 
         if (!userId) {
             return res.status(401).json({ error: "Unauthorized - no userId" });
         }
 
         const clerkUser = await clerkClient.users.getUser(userId);
-        // console.log("Clerk user:", clerkUser);
+        console.log("Clerk user:", clerkUser);
 
         const userDoc = await User.findOneAndUpdate(
             { clerkId: userId },
@@ -26,7 +26,7 @@ export const saveUser = async (req, res) => {
             { upsert: true, new: true }
         );
 
-        // console.log("User saved:", userDoc);
+        console.log("User saved:", userDoc);
         res.json(userDoc);
     } catch (err) {
         

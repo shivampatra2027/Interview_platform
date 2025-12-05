@@ -66,7 +66,7 @@ function App() {
             <ProtectedRoute>
               <SyncUser/>
               <DashboardPage />
-              {/* <DebugToken/> */}
+              <DebugToken/>
             </ProtectedRoute>
           } 
         />
