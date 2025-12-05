@@ -2,16 +2,17 @@ import React, { useState,useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LogIn, Mail, Lock, User, Cpu } from 'lucide-react';
 import {useUser,SignIn} from "@clerk/clerk-react";
+import {saveUser} from "../api/user.js"
 
 export default function LoginPage() {
-
   const {isSignedIn} = useUser();
   const navigate = useNavigate();
-  useEffect(()=>{
+  useEffect(async()=>{
     if(isSignedIn){
+      await saveUser();
       navigate("/dashboard")
     }
-  },[isSignedIn]);
+  },[isSignedIn,navigate]);
   const [isSignup, setIsSignup] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
@@ -21,9 +22,7 @@ export default function LoginPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: Implement API call to backend
     console.log('Form submitted:', formData);
-    // Navigate to dashboard after successful login
     navigate('/dashboard');
   };
 

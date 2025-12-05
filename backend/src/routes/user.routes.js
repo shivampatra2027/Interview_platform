@@ -1,9 +1,7 @@
 import express from 'express';
-import { ClerkExpressRequireAuth } from '@clerk/clerk-sdk-node';
 import { saveUser } from '../controllers/user.controller.js';
 import { requireAuth } from "@clerk/express";
 
 const router = express.Router();
-router.post('/save-user', requireAuth(), saveUser);
-
+router.post("/save-user", requireAuth(), saveUser);
 export default router;
