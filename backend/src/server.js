@@ -28,9 +28,9 @@ app.use(
   })
 );
 
-app.use('/api/users',userRoutes);
 app.use(cookieParser());
 app.use(express.json());
+app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/interview", interviewRoutes);
 app.use("/api", apiRouter);

@@ -2,6 +2,7 @@
 
 import  InterviewSession  from "../models/interviewSession.model.js";
 import  Report  from "../models/report.model.js";
+import { User } from "../models/user.model.js";
 import { success } from "../utils/response.js";
 import {
   generateQuestionsForPosition,
@@ -14,6 +15,15 @@ export const createInterview = async (req, res, next) => {
     const allowedLevels = ["beginner", "easy", "hard", "advanced"];
     const level = allowedLevels.includes(difficultyLevel) ? difficultyLevel : "beginner";
 
+    // Find the user by clerkId to get the MongoDB _id
+    const user = await User.findOne({ clerkId: req.auth.userId });
+    if (!user) {
+      return res.status(404).json({ 
+        success: false, 
+        message: "User not found. Please ensure you're logged in." 
+      });
+    }
+
     const rawQuestions = await generateQuestionsForPosition({
       position: position || "Software Developer",
       difficultyLevel: level,
@@ -22,7 +32,7 @@ export const createInterview = async (req, res, next) => {
     const questions = rawQuestions.map(q => ({ text: q }));
 
     const interview = await InterviewSession.create({
-      user: req.auth.userId, 
+      user: user._id, 
       title: title || "Mock Interview",
       position: position || "",
       difficultyLevel: level,
@@ -42,9 +52,18 @@ export const startInterview = async (req, res, next) => {
   try {
     const { id } = req.params;
 
+    // Find the user by clerkId to get the MongoDB _id
+    const user = await User.findOne({ clerkId: req.auth.userId });
+    if (!user) {
+      return res.status(404).json({ 
+        success: false, 
+        message: "User not found. Please ensure you're logged in." 
+      });
+    }
+
     const interview = await InterviewSession.findOne({
       _id: id,
-      user: req.auth.userId,
+      user: user._id,
     });
 
     if (!interview) {
@@ -79,9 +98,18 @@ export const submitAnswer = async (req, res, next) => {
   try {
     const { id } = req.params; 
 
+    // Find the user by clerkId to get the MongoDB _id
+    const user = await User.findOne({ clerkId: req.auth.userId });
+    if (!user) {
+      return res.status(404).json({ 
+        success: false, 
+        message: "User not found. Please ensure you're logged in." 
+      });
+    }
+
     const interview = await InterviewSession.findOne({
       _id: id,
-      user: req.auth.userId,
+      user: user._id,
     });
 
     if (!interview) {
@@ -149,9 +177,18 @@ export const completeInterview = async (req, res, next) => {
   try {
     const { id } = req.params;
 
+    // Find the user by clerkId to get the MongoDB _id
+    const user = await User.findOne({ clerkId: req.auth.userId });
+    if (!user) {
+      return res.status(404).json({ 
+        success: false, 
+        message: "User not found. Please ensure you're logged in." 
+      });
+    }
+
     let interview = await InterviewSession.findOne({
       _id: id,
-      user: req.auth.userId,
+      user: user._id,
     });
 
     if (!interview) {
@@ -163,7 +200,7 @@ export const completeInterview = async (req, res, next) => {
     if (interview.status === "completed") {
       const existingReport = await Report.findOne({
         interview: interview._id,
-        user: req.auth.userId,
+        user: user._id,
       });
       return success(
         res,
@@ -199,7 +236,7 @@ export const completeInterview = async (req, res, next) => {
     
     const report = await Report.create({
       interview: interview._id,
-      user: req.auth.userId,
+      user: user._id,
       overallScore: interview.overallScore,
       strengths: strengths || [],
       weaknesses: weaknesses || [],
@@ -229,8 +266,17 @@ export const completeInterview = async (req, res, next) => {
 
 export const getMyInterviews = async (req, res, next) => {
   try {
+    // Find the user by clerkId to get the MongoDB _id
+    const user = await User.findOne({ clerkId: req.auth.userId });
+    if (!user) {
+      return res.status(404).json({ 
+        success: false, 
+        message: "User not found. Please ensure you're logged in." 
+      });
+    }
+
     const interviews = await InterviewSession.find({
-      user: req.auth.userId,
+      user: user._id,
     })
       .sort({ createdAt: -1 })
       .select("-answers.rawAiFeedback");
@@ -245,9 +291,18 @@ export const getInterviewById = async (req, res, next) => {
   try {
     const { id } = req.params;
 
+    // Find the user by clerkId to get the MongoDB _id
+    const user = await User.findOne({ clerkId: req.auth.userId });
+    if (!user) {
+      return res.status(404).json({ 
+        success: false, 
+        message: "User not found. Please ensure you're logged in." 
+      });
+    }
+
     const interview = await InterviewSession.findOne({
       _id: id,
-      user: req.auth.userId,
+      user: user._id,
     }).populate("report");
 
     if (!interview) {
